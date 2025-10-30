@@ -1,0 +1,62 @@
+/*
+@title Autumndance
+@by AdmiralVanSynth
+@license CC BY-NC-SA
+*/
+
+setcpm(142/4)
+
+const chordProgressions = "[0 1 2 3][1 3 2 0]"
+const chordProgressionsSparse = "[0 2 - -][- - 1 2]"
+const chordProgressionsTransition = "[0 2 1 2][3 2 1 2]"
+const chordProgressionsLegato = ".75 .3 .25 1"
+const chordProgressionsLegatoTransition = ".75 1 1 1"
+
+const chordProgressionGenerator = (pattern, chordValue, legatoPattern) => {
+  return stack(n(pattern).legato(legatoPattern).room(0.4).chord(chordValue).s("sawtooth").voicing(),
+               chord(chordValue).s("gm_synth_strings_1").room(2).voicing().gain(0.2))
+};
+
+const euroBassGenerator = (bassCord) => {
+  return stack(note(bassCord).s("gm_synth_bass_1").cutoff(150).lpenv(2).struct("[x - x x][x - x x][x - x x][x - x x]").gain(0.2))
+}
+
+var euroDrumsHeavy = stack(s("rolandtr909_bd").struct("[x - - -][x - - -][x - - -][x - - -]"),
+                           s("rolandtr909_cp").struct("[- - - -][x - - -][- - - -][x - - -]"),
+                           s("rolandtr909_oh").struct("[- - x -][- - x -][- - x -][- - x -]"),
+                           s("rolandtr909_sd").struct("[- - - -][x - - -][- - - -][x - - -]"),
+                           s("rolandtr909_hh").struct("[x x x x][x x x x][x x x x][x x x x]")).gain(0.4)
+
+var euroDrumsFinale = stack(s("rolandtr909_bd").struct("[x - x x][x - x -][x x x -][x - x x]"),
+                            s("rolandtr909_cp").struct("[- - - -][x - - -][- - - -][x - x -]"),
+                            s("rolandtr909_oh").struct("[- - x -][- - x -][x - x -][x - x x]"),
+                            s("rolandtr909_sd").struct("[- - - -][x - - -][x x x -][x x x -]"),
+                            s("rolandtr909_hh").struct("[x - x x][x - x x][x x x -][x - x -]")).gain(0.4)
+
+var chordProgressionStakkato = arrange([1*01, stack(chordProgressionGenerator(chordProgressionsSparse,
+                                                                              "Bm",
+                                                                              chordProgressionsLegato))],
+                                       [1*01, stack(chordProgressionGenerator(chordProgressionsSparse,
+                                                                              "G",
+                                                                              chordProgressionsLegato))],
+                                       [1*01, stack(chordProgressionGenerator(chordProgressionsSparse,
+                                                                              "D",
+                                                                              chordProgressionsLegato))],
+                                       [1*01, stack(chordProgressionGenerator(chordProgressionsTransition,
+                                                                              "A",
+                                                                              chordProgressionsLegatoTransition))])
+
+$: arrange([1*04, arrange([1*01, stack(euroDrumsHeavy,
+                                      euroBassGenerator("B2"),
+                                       chordProgressionGenerator(chordProgressions, "Bm", chordProgressionsLegato))],
+                          [1*01, stack(euroDrumsHeavy,
+                                       euroBassGenerator("G2"),
+                                       chordProgressionGenerator(chordProgressions, "G", chordProgressionsLegato))],
+                          [1*01, stack(euroDrumsHeavy,
+                                       euroBassGenerator("D2"),
+                                       chordProgressionGenerator(chordProgressions, "D", chordProgressionsLegato))],
+                          [1*01, stack(euroDrumsFinale,
+                                       euroBassGenerator("A2"),
+                                       chordProgressionGenerator(chordProgressions, "A", chordProgressionsLegato))])],
+           [1*08, stack(chordProgressionStakkato)])
+          .pianoroll({background: '#0F172D', active: '#323E72', inactive: '#435499'})

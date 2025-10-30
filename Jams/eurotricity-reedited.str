@@ -1,0 +1,217 @@
+await import('http://localhost:5342/modules/trance.js')
+
+/*
+@title Eurotricity (Re-Edited)
+@by AdmiralVanSynth
+@license CC BY-NC-SA
+*/
+
+setcpm(288/4)
+
+var bassEnvelope = slider(0.834, 0.0, 6)
+var introEnvelope = slider(0.57,0, 6)
+var phaserRelease = slider(1.244,0,4)
+var phaserWobble = slider(0, 0, 32)
+
+var introInstrument = "triangle"
+var verseInstrument = "supersaw"
+
+var introGain = "0.7"
+var verseGain = "0.7"
+var drumsGain = "0.25"
+var highHatsGain = "0.25"
+var clapGain = "0.2"
+var padsGain = "0.15"
+var introPadsGain = "0.25"
+var bassMelodyGain = "0.8"
+var basslineGain = "0.2"
+var basslineGainIntro = "0.3"
+
+var introTranspose = "8M"
+
+ var intro = note(`<[A4 E5  ~ E5]
+                    [F5 E5  ~ E5]
+                    [A4 E5  ~  ~]
+                    [ ~  ~  ~  ~]
+                    [F4 C5  ~ C5]
+                    [D5 C5  ~ C5]
+                    [F4 C5  ~  ~]
+                    [ ~  ~  ~  ~]
+                    [C4 G4  ~ G4]
+                    [A4 G4  ~ G4]
+                    [C4 G4  ~  ~]
+                    [ ~  ~  ~  ~]
+                    [G4 D5  ~ D5]
+                    [E5 D5  ~ D5]
+                    [G4 D5  ~  ~]
+                    [ ~  ~  ~  ~]>`)
+             .sound(introInstrument)
+             .cutoff(1024)
+             .lpenv(4)
+             .clip(.5)
+             .room(.25)
+             .transpose(introTranspose)
+             .gain(introGain)
+
+ var introBridge = note(`<[A4 E5  ~ E5]
+                          [F5 E5  ~ E5]
+                          [A4 E5  ~  ~]
+                          [ ~  ~  ~  ~]
+                          [F4 C5  ~ C5]
+                          [D5 C5  ~ C5]
+                          [F4 C5  ~  ~]
+                          [ ~  ~  ~  ~]
+                          [C4 G4  ~ G4]
+                          [A4 G4  ~ G4]
+                          [C4 G4  ~  ~]
+                          [ ~  ~  ~  ~]
+                          [G4 D5  ~ D5]
+                          [E5 D5  ~ D5]
+                          [G4 D5 B4 D5]
+                          [C5 D5 C5 D5]>`)
+             .sound(introInstrument)
+             .cutoff(1024)
+             .lpenv(4)
+             .clip(.5)
+             .room(.25)
+             .transpose(introTranspose)
+             .gain(introGain)
+
+
+
+var alternateIntro = note(`<[ ~ E5 A4 E5]
+                            [ ~ E5 F5 E5]
+                            [ ~ E5 A4 E5]
+                            [ ~  ~  ~  ~]
+                            [ ~ C5 F4 C5]
+                            [ ~ C5 D5 C5]
+                            [ ~ C5 F4 C5]
+                            [ ~  ~  ~  ~]
+                            [ ~ G4 C4 G4]
+                            [ ~ G4 A4 G4]
+                            [ ~ G4 C4 G4]
+                            [ ~  ~  ~  ~]
+                            [ ~ D5 G4 D5]
+                            [ ~ D5 E5 D5]
+                            [ ~ D5 G4 D5]
+                            [C5 D5 C5 D5]>`)
+             .sound(introInstrument)
+             .cutoff(1024)
+             .lpenv(4)
+             .clip(.5)
+             .room(.25)
+             .transpose(introTranspose)
+             .gain(introGain)
+
+var bridge = note(`<[A4 E5  ~ E5]
+                    [F5 E5  ~ E5]
+                    [A4 E5 C5 E5]
+                    [D5 E5 D5 E5]
+                    [F4 C5  ~ C5]
+                    [D5 C5  ~ C5]
+                    [F4 C5 A4 C5]
+                    [B4 C5 B4 C5]
+                    [C4 G4  ~ G4]
+                    [A4 G4  ~ G4]
+                    [C4 G4 E4 G4]
+                    [F4 G4 F4 G4]
+                    [G4 D5  ~ D5]
+                    [E5 D5  ~ D5]
+                    [G4 D5 B4 D5]
+                    [C5 D5 C5 D5]>`)
+             .sound(introInstrument)
+             .cutoff(1024)
+             .lpenv(4)
+             .clip(.5)
+             .room(.25)
+             .transpose(introTranspose)
+             .gain(introGain)
+
+
+
+var phaserAm = chord(`<[C]/4>`).s("supersaw").voicing().phaser(phaserWobble).gain(0.05)
+var phaserG = chord(`<[G]/4>`).s("supersaw").voicing().phaser(phaserWobble).gain(0.05)
+
+var pads = chord(`<[Am F C G]/16>`).s("gm_pad_sweep").voicing().room(0.2).gain(padsGain)
+var padG = chord(`<[G]/4>`).s("gm_pad_sweep").voicing().sustain(1).release(1).room(0.0).gain(introPadsGain)
+var padAm = chord(`<[Am]/4>`).s("gm_pad_sweep").voicing().sustain(1).release(1).room(0.0).gain(introPadsGain)
+
+var drums = s("rolandtr909_bd").struct("x - x -").gain(drumsGain)
+
+var drumsDouble = s("rolandtr909_bd").struct("x - x - x - x - x - x - x - x x").slow(4).gain(drumsGain)
+
+var closedhats = s("rolandtr909_hh").struct("x - x x x - x x").gain(highHatsGain)
+var doubleOpenHats = s("rolandtr909_hh").struct("x - x -").gain(highHatsGain)
+
+var snareDrumsCrash = s("rolandtr909_sd").struct("x x x x x x x x").gain("<.0!8 .04 .06 .08 .1 .15 .2 .2 .2>")
+
+var crash = s("rolandtr909_cr").struct("- - - - - - - - - - - - - - - - - - - - - - - - x - x - x x x x").slow(16).gain("<.0!2 .01!2 .1!2 .2 .25>")
+
+var bass = note("<[A2 F2 C2 G2]/16>")
+          .sound("gm_synth_bass_1")
+          .cutoff(150)
+          .lpenv(bassEnvelope)
+          .room(0.2)
+          .struct("x - x x x - x x")
+          .gain(basslineGain)
+
+var bassG = note("<[G2]/4>")
+          .sound("gm_synth_bass_1")
+          .cutoff(150)
+          .lpenv(bassEnvelope)
+          .room(0.2)
+          .struct("x - x x x - x x")
+          .gain(basslineGainIntro)
+
+var verse =  note(`<[~ C5 C5 {C5 B4}]
+                   [C5 C5 C5 ~]
+                   [~ A4 A4 {G4 A4 G4}]
+                   [A4 A4 A4 G4]
+                   [~ E4 E4 {E4 D4}]
+                   [E4 E4 E4 ~]
+                   [~ B4 B4 {A4 B4 A4}]
+                   [B4 B4 B4 A4]
+                   [~ C5 C5 {C5 B4}]
+                   [C5 C5 C5 ~]
+                   [~ A4 A4 {G4 A4 G4}]
+                   [A4 A4 A4 G4]
+                   [~ E4 E4 {E4 D4}]
+                   [E4 E4 E4 ~]
+                   [~ B4 B4 {A4 B4 A4}]
+                   [B4 B4 B4 A4]>`).sound(verseInstrument)
+  .legato(`<[1.5 0.25 0.5 2]
+          [1.0 1 .5 1]
+          [0.5 0.25 0.5 0.25]
+          [1.0 1 .5 2]>`)
+  .lpf(sine.range(1200, 10000).slow(4))
+             .gain(verseGain)
+             ._pianoroll()
+var bassMelody = note(`<[F2 F2 F2 F2 E2 E2 E2 E2]
+                        [C2 B1 A1 G1 F1 F1 F1 F1]
+                        [F2 F2 F2 F2 E2 E2 E2 E2]
+                        [C2 B1 A1 G1 F1 F1 F1 F1]
+                        [E2 E2 E2 E2 D2 D2 D2 D2]
+                        [B1 A1 G1 F1 E1 E1 E1 E1]
+                        [E2 E2 E2 E2 D2 D2 D2 D2]
+                        [B1 A1 G1 F1 E1 E1 E1 E1]>`).slow(2)
+          .sound("gm_synth_bass_1")
+          .cutoff(400)
+          .room(0.2)
+          .gain(bassMelodyGain)
+
+$: arrange([1*4, stack(phaserAm, padAm)],
+           [1*4, stack(phaserG, padG, bassG)],
+           [1*16, stack(alternateIntro, pads, bass)],
+           [1*16, stack(intro, bass, pads, doubleOpenHats)],
+           [1*16, stack(introBridge, bass, doubleOpenHats, pads)],
+           [1*16, stack(bridge, drumsDouble, closedhats, bass, pads)],
+           [1*16, stack(bridge, drumsDouble, snareDrumsCrash, crash, closedhats, bass, pads)],
+           [1*16, stack(verse, closedhats, bass, drumsDouble, pads)],
+           [1*16, stack(verse, closedhats, bass, drumsDouble, pads, crash)],
+           [1*16, stack(pads.gain(0.1), closedhats, bassMelody)],
+           [1*16, stack(alternateIntro, drums, closedhats, bass, pads)],
+           [1*16, stack(intro, drums, closedhats, bass, pads)],
+           [1*16, stack(introBridge, drumsDouble, closedhats, bass, pads)],
+           [1*16, stack(bridge, closedhats, bass, pads)],
+           [1*4, stack(pads)])
+          .pianoroll({background: '#0F172D', active: '#323E72', inactive: '#435499'})
