@@ -1,0 +1,103 @@
+await samples('github:AdmiralVanSynth/strudel-samples')
+
+/*
+@title Say My Name
+@by Admiral Van Synth
+@license CC BY-NC-SA
+*/
+
+setcpm(142/4)
+
+const cp = "[0 1 2 3][1 3 2 0]"
+const cpSparse = "[0 2 - -][- - 1 2]"
+const cpTransition = "[0 2 1 2][3 2 1 2]"
+const cpLegato = ".75 .3 .25 1"
+const cpLegatoTransition = ".75 1 1 1"
+
+const cpGen = (pattern, chordValue, legatoPattern) => {
+  return stack(n(pattern).legato(legatoPattern).room(0.4).chord(chordValue).s("sawtooth").voicing(),
+               chord(chordValue).s("gm_synth_strings_1").room(2).voicing().gain(0.2))
+};
+
+const ebGen = (bassCord) => {
+  return stack(note(bassCord).s("gm_synth_bass_1").cutoff(150).lpenv(2).struct("[x - x x][x - x x][x - x x][x - x x]").gain(0.2))
+}
+
+var euroDrumsHeavy = stack(s("rolandtr909_bd").struct("[x - - -][x - - -][x - - -][x - - -]"),
+                           s("rolandtr909_cp").struct("[- - - -][x - - -][- - - -][x - - -]"),
+                           s("rolandtr909_oh").struct("[- - x -][- - x -][- - x -][- - x -]"),
+                           s("rolandtr909_sd").struct("[- - - -][x - - -][- - - -][x - - -]"),
+                           s("rolandtr909_hh").struct("[x x x x][x x x x][x x x x][x x x x]")).gain(0.4)
+
+var euroDrumsFinale = stack(s("rolandtr909_bd").struct("[x - x x][x - x -][x x x -][x - x x]"),
+                            s("rolandtr909_cp").struct("[- - - -][x - - -][- - - -][x - x -]"),
+                            s("rolandtr909_oh").struct("[- - x -][- - x -][x - x -][x - x x]"),
+                            s("rolandtr909_sd").struct("[- - - -][x - - -][x - x x][x x x -]"),
+                            s("rolandtr909_hh").struct("[x - x x][x - x x][x x x -][x - x -]")).gain(0.4)
+
+var highHatsOnly = stack(s("rolandtr909_oh").struct("[- - x -][- - x -][- - x -][- - x -]"),
+                           s("rolandtr909_hh").struct("[x x x x][x x x x][x x x x][x x x x]")).gain(0.4)
+
+var saymyname = arrange([1*01, s("bbvoice:3").struct("x")])
+var heisenberg = arrange([1*01, s("bbvoice:1").struct("x").gain(1.4)])
+var youaregoddamnright = arrange([1*01, s("bbvoice:0").struct("x")])
+var iamtheonewhoknocks = arrange([1*01, s("bbvoice:2").struct("x").room(0.2).gain(1.4)])
+
+var cpNoDrums = arrange([1*01, stack(saymyname,
+                                     highHatsOnly,
+                                     cpGen(cpSparse,
+                                           "Bm",
+                                           cpLegato))],
+                        [1*01, stack(heisenberg,
+                                     highHatsOnly,
+                                     cpGen(cpSparse,
+                                           "G",
+                                           cpLegato))],
+                        [1*01, stack(youaregoddamnright,
+                                     highHatsOnly,
+                                     cpGen(cpSparse,
+                                           "D",
+                                           cpLegato))],
+                        [1*01, stack(highHatsOnly, 
+                                     cpGen(cpTransition,
+                                           "A",
+                                           cpLegatoTransition))])
+
+$: arrange([1*04, arrange([1*01, stack(euroDrumsHeavy,
+                                      ebGen("B2"),
+                                       cpGen(cp, "Bm", cpLegato))],
+                          [1*01, stack(euroDrumsHeavy,
+                                       ebGen("G2"),
+                                       cpGen(cp, "G", cpLegato))],
+                          [1*01, stack(euroDrumsHeavy,
+                                       ebGen("D2"),
+                                       cpGen(cp, "D", cpLegato))],
+                          [1*01, stack(euroDrumsFinale,
+                                       ebGen("A2"),
+                                       cpGen(cp, "A", cpLegato))])],
+           [1*04, stack(cpNoDrums)],
+           [1*04, arrange([1*01, stack(euroDrumsHeavy,
+                                      ebGen("B2"),
+                                       cpGen(cp, "Bm", cpLegato))],
+                          [1*01, stack(iamtheonewhoknocks, euroDrumsHeavy,
+                                       ebGen("G2"),
+                                       cpGen(cp, "G", cpLegato))],
+                          [1*01, stack(euroDrumsHeavy,
+                                       ebGen("D2"),
+                                       cpGen(cp, "D", cpLegato))],
+                          [1*01, stack(euroDrumsFinale,
+                                       ebGen("A2"),
+                                       cpGen(cp, "A", cpLegato))])],
+           [1*12, arrange([1*01, stack(euroDrumsHeavy,
+                                       ebGen("B2"),
+                                       cpGen(cp, "Bm", cpLegato))],
+                          [1*01, stack(euroDrumsHeavy,
+                                       ebGen("G2"),
+                                       cpGen(cp, "G", cpLegato))],
+                          [1*01, stack(euroDrumsHeavy,
+                                       ebGen("D2"),
+                                       cpGen(cp, "D", cpLegato))],
+                          [1*01, stack(euroDrumsHeavy,
+                                       ebGen("A2"),
+                                       cpGen(cp, "A", cpLegato))])])
+          .pianoroll({background: '#0F172D', active: '#323E72', inactive: '#435499'})
